@@ -98,4 +98,4 @@ jupyter notebook notebooks/numerical_odes.ipynb
 ## Author
 
 **Coy Johnson** — [coyjohnson25@gmail.com](mailto:coyjohnson25@gmail.com)  
-M.S. Mathematics Candidate | Applied Mathematician
+M.S. Mathematics Candidate | Applied Mathematician# machine-learning-from-scratch
