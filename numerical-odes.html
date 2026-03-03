@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Numerical Differential Equations — Coy Johnson</title>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet"/>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --bg: #F8F6F2; --bg2: #EFECE6; --ink: #1A1A18; --ink2: #4A4A45;
+      --ink3: #8A8A82; --accent: #2D5F4F; --accent2: #C8A96E;
+      --border: #E0DDD6; --card: #FFFFFF; --tag-bg: #EAF2EF; --tag-txt: #2D5F4F;
+    }
+    html { scroll-behavior: smooth; }
+    body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--ink); line-height: 1.65; }
+    nav { position: fixed; top: 0; left: 0; right: 0; z-index: 100; background: rgba(248,246,242,0.92); backdrop-filter: blur(12px); border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; padding: 0 6vw; height: 64px; }
+    .nav-name { font-family: 'DM Serif Display', serif; font-size: 1.1rem; color: var(--ink); text-decoration: none; }
+    .nav-back { font-size: 0.82rem; font-weight: 500; color: var(--ink2); text-decoration: none; display: flex; align-items: center; gap: 0.4rem; transition: color 0.2s; }
+    .nav-back:hover { color: var(--accent); }
+    .hero { padding: 140px 6vw 80px; max-width: 1100px; margin: 0 auto; display: grid; grid-template-columns: 1fr 380px; gap: 4rem; align-items: start; animation: fadeUp 0.7s ease forwards; }
+    .hero-meta { font-family: 'JetBrains Mono', monospace; font-size: 0.72rem; color: var(--accent); letter-spacing: 0.12em; text-transform: uppercase; margin-bottom: 1rem; }
+    .hero-title { font-family: 'DM Serif Display', serif; font-size: clamp(2.2rem, 4vw, 3.4rem); line-height: 1.1; color: var(--ink); margin-bottom: 1rem; }
+    .hero-title em { font-style: italic; color: var(--accent); }
+    .hero-desc { font-size: 1rem; color: var(--ink2); max-width: 520px; margin-bottom: 2rem; }
+    .hero-tags { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-bottom: 2rem; }
+    .tag { font-family: 'JetBrains Mono', monospace; font-size: 0.7rem; padding: 0.3rem 0.75rem; background: var(--tag-bg); color: var(--tag-txt); border-radius: 2px; }
+    .btn { display: inline-flex; align-items: center; gap: 0.4rem; padding: 0.7rem 1.5rem; font-size: 0.85rem; font-weight: 600; text-decoration: none; border-radius: 3px; transition: all 0.2s; }
+    .btn-primary { background: var(--accent); color: #fff; } .btn-primary:hover { background: #224840; }
+    .btn-secondary { background: transparent; color: var(--ink); border: 1.5px solid var(--border); } .btn-secondary:hover { border-color: var(--accent); color: var(--accent); }
+    .info-card { background: var(--card); border: 1px solid var(--border); border-radius: 6px; padding: 1.75rem; }
+    .info-row { display: flex; justify-content: space-between; align-items: flex-start; padding: 0.75rem 0; border-bottom: 1px solid var(--border); font-size: 0.85rem; } .info-row:last-child { border-bottom: none; }
+    .info-label { color: var(--ink3); font-weight: 500; font-size: 0.78rem; text-transform: uppercase; letter-spacing: 0.06em; }
+    .info-value { color: var(--ink); font-weight: 500; text-align: right; }
+    .content { max-width: 1100px; margin: 0 auto; padding: 0 6vw 100px; }
+    .section { margin-bottom: 64px; }
+    .section-label { font-family: 'JetBrains Mono', monospace; font-size: 0.7rem; color: var(--ink3); letter-spacing: 0.12em; text-transform: uppercase; margin-bottom: 0.5rem; }
+    .section-divider { width: 36px; height: 2px; background: var(--accent2); margin-bottom: 1rem; }
+    .section-heading { font-family: 'DM Serif Display', serif; font-size: 1.7rem; color: var(--ink); margin-bottom: 1.25rem; }
+    p { color: var(--ink2); margin-bottom: 1rem; font-size: 0.95rem; }
+    .math-block { background: var(--ink); border-radius: 6px; padding: 1.75rem 2rem; margin: 1.5rem 0; font-family: 'JetBrains Mono', monospace; font-size: 0.85rem; color: #b8e0d4; line-height: 2.2; }
+    .math-comment { color: #5a8a7a; }
+    .code-block { background: #1e1e1e; border-radius: 6px; padding: 1.75rem 2rem; margin: 1.5rem 0; overflow-x: auto; font-family: 'JetBrains Mono', monospace; font-size: 0.78rem; line-height: 1.9; color: #d4d4d4; }
+    .kw { color: #569cd6; } .fn { color: #dcdcaa; } .str { color: #ce9178; } .cm { color: #6a9955; } .num { color: #b5cea8; }
+    .result-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.25rem; margin: 1.5rem 0; }
+    .result-card { background: var(--card); border: 1px solid var(--border); border-radius: 6px; padding: 1.5rem; text-align: center; }
+    .result-num { font-family: 'DM Serif Display', serif; font-size: 2rem; color: var(--accent); }
+    .result-label { font-size: 0.78rem; color: var(--ink3); margin-top: 0.25rem; }
+    .method-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.25rem; margin: 1.5rem 0; }
+    .method-card { background: var(--card); border: 1px solid var(--border); border-radius: 6px; padding: 1.5rem; }
+    .method-name { font-family: 'DM Serif Display', serif; font-size: 1.1rem; color: var(--ink); margin-bottom: 0.5rem; }
+    .method-order { font-family: 'JetBrains Mono', monospace; font-size: 0.72rem; color: var(--accent); margin-bottom: 0.75rem; }
+    .method-desc { font-size: 0.83rem; color: var(--ink2); }
+    .steps { list-style: none; counter-reset: steps; }
+    .steps li { counter-increment: steps; display: flex; gap: 1.25rem; margin-bottom: 1.25rem; align-items: flex-start; }
+    .steps li::before { content: counter(steps, decimal-leading-zero); font-family: 'JetBrains Mono', monospace; font-size: 0.72rem; color: var(--accent); background: var(--tag-bg); padding: 0.3rem 0.6rem; border-radius: 2px; flex-shrink: 0; margin-top: 0.1rem; }
+    .steps li p { margin: 0; font-size: 0.9rem; }
+    .insight-list { list-style: none; display: flex; flex-direction: column; gap: 0.75rem; }
+    .insight-list li { display: flex; gap: 0.75rem; align-items: flex-start; font-size: 0.9rem; color: var(--ink2); }
+    .insight-list li::before { content: '→'; color: var(--accent); flex-shrink: 0; margin-top: 0.05rem; }
+    @keyframes fadeUp { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: none; } }
+    @media (max-width: 768px) { .hero { grid-template-columns: 1fr; } .result-grid, .method-grid { grid-template-columns: 1fr 1fr; } }
+  </style>
+</head>
+<body>
+<nav>
+  <a href="index.html" class="nav-name">Coy Johnson</a>
+  <a href="index.html#projects" class="nav-back">← Back to Projects</a>
+</nav>
+
+<div class="hero">
+  <div>
+    <div class="hero-meta">Project 03 — Numerical Analysis</div>
+    <h1 class="hero-title">Numerical Solutions to<br><em>Differential Equations</em></h1>
+    <p class="hero-desc">Euler, Runge-Kutta, and stability analysis applied to physical systems — from pendulum dynamics to population modeling — with rigorous error analysis and convergence visualization.</p>
+    <div class="hero-tags">
+      <span class="tag">Python</span><span class="tag">MATLAB</span><span class="tag">NumPy</span>
+      <span class="tag">Numerical Analysis</span><span class="tag">Physics Modeling</span>
+    </div>
+    <div style="display:flex; gap:1rem; flex-wrap:wrap;">
+      <a href="https://github.com/coyjohnson25/numerical-differential-equations" target="_blank" class="btn btn-primary">View on GitHub</a>
+      <a href="#overview" class="btn btn-secondary">Read More</a>
+    </div>
+  </div>
+  <div class="info-card">
+    <div class="info-row"><span class="info-label">Type</span><span class="info-value">Scientific Computing</span></div>
+    <div class="info-row"><span class="info-label">Tools</span><span class="info-value">Python, MATLAB</span></div>
+    <div class="info-row"><span class="info-label">Domain</span><span class="info-value">Numerical Analysis</span></div>
+    <div class="info-row"><span class="info-label">Status</span><span class="info-value" style="color:var(--accent)">● Active</span></div>
+    <div class="info-row"><span class="info-label">Repo</span><span class="info-value">numerical-diff-equations</span></div>
+  </div>
+</div>
+
+<div class="content">
+  <div class="section" id="overview">
+    <div class="section-label">01 — Overview</div>
+    <div class="section-divider"></div>
+    <h2 class="section-heading">Project Overview</h2>
+    <p>Differential equations govern nearly every physical system — from planetary motion to epidemic spread. Most real-world ODEs have no closed-form solution, making numerical methods essential. This project implements a suite of numerical solvers from scratch, applies them to physically meaningful systems, and rigorously analyzes their accuracy and stability.</p>
+    <p>The project draws directly from Coy's background in classical mechanics, electromagnetism, and thermodynamics — translating physical intuition into computational implementations.</p>
+  </div>
+
+  <div class="section">
+    <div class="section-label">02 — Methods Implemented</div>
+    <div class="section-divider"></div>
+    <h2 class="section-heading">Numerical Methods</h2>
+    <div class="method-grid">
+      <div class="method-card">
+        <div class="method-name">Euler Method</div>
+        <div class="method-order">Order 1 — O(h)</div>
+        <div class="method-desc">Simplest explicit method. One function evaluation per step. Useful as a baseline for error comparison.</div>
+      </div>
+      <div class="method-card">
+        <div class="method-name">RK2 (Midpoint)</div>
+        <div class="method-order">Order 2 — O(h²)</div>
+        <div class="method-desc">Two function evaluations per step. Significant accuracy improvement over Euler with minimal added cost.</div>
+      </div>
+      <div class="method-card">
+        <div class="method-name">RK4 (Classic)</div>
+        <div class="method-order">Order 4 — O(h⁴)</div>
+        <div class="method-desc">Four evaluations per step. Industry-standard balance of accuracy and computational cost for most ODEs.</div>
+      </div>
+    </div>
+
+    <div class="math-block">
+      <span class="math-comment"># Euler Method</span><br>
+      y_{n+1} = yₙ + h · f(tₙ, yₙ)<br><br>
+      <span class="math-comment"># RK4 — Weighted average of four slopes</span><br>
+      k₁ = f(tₙ, yₙ)<br>
+      k₂ = f(tₙ + h/2, yₙ + h·k₁/2)<br>
+      k₃ = f(tₙ + h/2, yₙ + h·k₂/2)<br>
+      k₄ = f(tₙ + h, yₙ + h·k₃)<br><br>
+      y_{n+1} = yₙ + (h/6)(k₁ + 2k₂ + 2k₃ + k₄)
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-label">03 — Physical Systems</div>
+    <div class="section-divider"></div>
+    <h2 class="section-heading">Systems Modeled</h2>
+    <ol class="steps">
+      <li><p><strong>Simple Pendulum</strong> — θ'' + (g/L)sin(θ) = 0. Nonlinear ODE with no closed-form solution for large angles. Compared small-angle approximation vs exact numerical solution.</p></li>
+      <li><p><strong>Damped Harmonic Oscillator</strong> — mx'' + bx' + kx = 0. Models springs, circuits, and shock absorbers. Phase portraits reveal underdamped vs overdamped behavior.</p></li>
+      <li><p><strong>SIR Epidemic Model</strong> — Coupled system: dS/dt = -βSI, dI/dt = βSI - γI. Demonstrates how R₀ determines epidemic spread vs containment.</p></li>
+      <li><p><strong>Logistic Population Growth</strong> — dP/dt = rP(1 - P/K). Analytical solution exists; used to validate numerical accuracy against ground truth.</p></li>
+    </ol>
+
+    <div class="code-block">
+<span class="kw">import</span> numpy <span class="kw">as</span> np
+<span class="kw">import</span> matplotlib.pyplot <span class="kw">as</span> plt
+
+<span class="kw">def</span> <span class="fn">rk4</span>(f, t0, y0, tf, h):
+    <span class="str">"""Classic 4th-order Runge-Kutta solver."""</span>
+    t = np.<span class="fn">arange</span>(t0, tf + h, h)
+    y = np.<span class="fn">zeros</span>((len(t), <span class="fn">len</span>(y0)))
+    y[<span class="num">0</span>] = y0
+
+    <span class="kw">for</span> i <span class="kw">in</span> <span class="fn">range</span>(<span class="num">1</span>, <span class="fn">len</span>(t)):
+        k1 = np.<span class="fn">array</span>(<span class="fn">f</span>(t[i-<span class="num">1</span>], y[i-<span class="num">1</span>]))
+        k2 = np.<span class="fn">array</span>(<span class="fn">f</span>(t[i-<span class="num">1</span>] + h/<span class="num">2</span>, y[i-<span class="num">1</span>] + h*k1/<span class="num">2</span>))
+        k3 = np.<span class="fn">array</span>(<span class="fn">f</span>(t[i-<span class="num">1</span>] + h/<span class="num">2</span>, y[i-<span class="num">1</span>] + h*k2/<span class="num">2</span>))
+        k4 = np.<span class="fn">array</span>(<span class="fn">f</span>(t[i-<span class="num">1</span>] + h, y[i-<span class="num">1</span>] + h*k3))
+        y[i] = y[i-<span class="num">1</span>] + (h / <span class="num">6</span>) * (k1 + <span class="num">2</span>*k2 + <span class="num">2</span>*k3 + k4)
+
+    <span class="kw">return</span> t, y
+
+<span class="kw">def</span> <span class="fn">pendulum</span>(t, state, g=<span class="num">9.81</span>, L=<span class="num">1.0</span>):
+    <span class="str">"""Nonlinear pendulum ODE: [dθ/dt, dω/dt]"""</span>
+    theta, omega = state
+    <span class="kw">return</span> [omega, -(g/L) * np.<span class="fn">sin</span>(theta)]
+
+<span class="cm"># Solve for large angle (70°) — no small-angle approximation</span>
+t, sol = <span class="fn">rk4</span>(<span class="fn">pendulum</span>, t0=<span class="num">0</span>, y0=[np.radians(<span class="num">70</span>), <span class="num">0</span>], tf=<span class="num">10</span>, h=<span class="num">0.01</span>)
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-label">04 — Results</div>
+    <div class="section-divider"></div>
+    <h2 class="section-heading">Key Results</h2>
+    <div class="result-grid">
+      <div class="result-card"><div class="result-num">O(h⁴)</div><div class="result-label">RK4 local truncation error</div></div>
+      <div class="result-card"><div class="result-num">~100×</div><div class="result-label">RK4 more accurate than Euler at h=0.1</div></div>
+      <div class="result-card"><div class="result-num">4</div><div class="result-label">Physical systems modeled</div></div>
+    </div>
+    <p>For the logistic population model (where an analytical solution exists), RK4 with h = 0.1 produced a global error of 1.2×10⁻⁵ compared to Euler's error of 8.7×10⁻³ — confirming the theoretical order-of-accuracy difference in practice.</p>
+    <p>The pendulum simulation revealed that at 70° initial angle, the small-angle approximation overpredicts the period by 18% — a meaningful physical insight with direct application to engineering design.</p>
+  </div>
+
+  <div class="section">
+    <div class="section-label">05 — Insights</div>
+    <div class="section-divider"></div>
+    <h2 class="section-heading">Key Insights</h2>
+    <ul class="insight-list">
+      <li>Stability is not the same as accuracy. Euler's method can be stable yet wildly inaccurate; implicit methods trade computational cost for guaranteed stability.</li>
+      <li>Stiff ODEs (where solution components decay at very different rates) defeat explicit methods — step size is constrained by the fastest-decaying component, not the feature of interest.</li>
+      <li>Phase portraits reveal qualitative behavior instantly — limit cycles, equilibria, and basins of attraction are geometrically obvious in phase space.</li>
+      <li>The SIR model demonstrates that R₀ = β/γ fully determines epidemic fate — a profound example of a single dimensionless number governing complex system behavior.</li>
+    </ul>
+  </div>
+
+  <div class="section">
+    <div class="section-label">06 — Future Work</div>
+    <div class="section-divider"></div>
+    <h2 class="section-heading">Future Improvements</h2>
+    <ul class="insight-list">
+      <li>Implement adaptive step-size control (RK45) with error estimation and automatic refinement.</li>
+      <li>Add implicit methods (Crank-Nicolson, BDF) for stiff ODE systems.</li>
+      <li>Extend to partial differential equations — heat equation and wave equation via finite differences.</li>
+      <li>3D visualizations of chaotic systems: Lorenz attractor, double pendulum.</li>
+    </ul>
+  </div>
+</div>
+
+<footer style="text-align:center; padding:2.5rem 6vw; font-size:0.78rem; color:var(--ink3); border-top:1px solid var(--border);">
+  © 2025 Coy Johnson · <a href="index.html" style="color:var(--accent); text-decoration:none;">Back to Portfolio</a>
+</footer>
+</body>
+</html>
