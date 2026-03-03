@@ -102,3 +102,4 @@ M.S. Mathematics Candidate | Applied Mathematician# machine-learning-from-scratc
 # machine-learning-from-scratch
 # machine-learning-from-scratchh
 # machine-learning-from-scratchh
+# numerical-differential-equations
